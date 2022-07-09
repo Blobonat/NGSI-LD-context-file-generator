@@ -4,7 +4,6 @@ const $RefParser = require('@apidevtools/json-schema-ref-parser');
 
 const Markdown = require('./markdown.js');
 const JSONLD = require('./jsonld.js');
-const Schema = require('./schema.js');
 
 let api;
 

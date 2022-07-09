@@ -1,6 +1,6 @@
 function addCommonContextURLs(context) {
-  context['ngsi-ld'] = 'https://uri.etsi.org/ngsi-ld/';
-  context.fiware = 'https://uri.fiware.org/ns/data-models#';
+  context['ngsi-ld'] = 'https://uri.etsi.org/ngsi-ld/sss';
+  // context.fiware = 'https://uri.fiware.org/ns/data-models#';
   context.schema = 'https://schema.org/';
 }
 
@@ -11,7 +11,7 @@ function addCommonGraphURLs(context) {
 
 function replaceCommonContextURLs(text) {
   return text
-    .replace(/https:\/\/uri\.fiware\.org\/ns\/data-models#/g, 'fiware:')
+    // .replace(/https:\/\/uri\.fiware\.org\/ns\/data-models#/g, 'fiware:')
     .replace(/https:\/\/schema\.org\//g, 'schema:')
     .replace(/https:\/\/uri\.etsi\.org\/ngsi\-ld\//g, 'ngsi-ld:');
 }
