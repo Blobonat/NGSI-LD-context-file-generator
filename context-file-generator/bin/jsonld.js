@@ -1,5 +1,5 @@
 function addCommonContextURLs(context) {
-  context['ngsi-ld'] = 'https://uri.etsi.org/ngsi-ld/sss';
+  context['ngsi-ld'] = 'https://uri.etsi.org/ngsi-ld/';
   // context.fiware = 'https://uri.fiware.org/ns/data-models#';
   context.schema = 'https://schema.org/';
 }
