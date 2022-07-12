@@ -50,17 +50,17 @@ async function ngsi(input, lang) {
 
 async function jsonld(input, lang) {
   JSONLD.addCommonContextURLs(context);
-  // JSONLD.addCommonGraphURLs(context);
+  JSONLD.addCommonGraphURLs(context);
 
   await dereferenceYaml(input);
 
-  // console.log(
-  //   JSON.stringify(
-  //     JSONLD.addGraph(api, JSONLD.getContext(api, context, true)),
-  //     null,
-  //     4
-  //   )
-  // );
+  console.log(
+    JSON.stringify(
+      JSONLD.addGraph(api, JSONLD.getContext(api, context, true)),
+      null,
+      4
+    )
+  );
 }
 
 exports.validate = validate;
