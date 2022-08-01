@@ -1,5 +1,5 @@
 function addCommonContextURLs(context) {
-  context['ngsi-ld'] = 'https://uri.etsi.org/ngsi-ld/';
+  // context['ngsi-ld'] = 'https://uri.etsi.org/ngsi-ld/';
   // context.fiware = 'https://uri.fiware.org/ns/data-models#';
   context.schema = 'https://schema.org/';
   context.smartdata = 'https://smartdatamodels.org/'
@@ -63,13 +63,14 @@ function addEntry(text, type, key, uri, value, expand) {
 
   if (type === 'Property' || type === 'GeoProperty') {
     let entry;
-    if (value.format === 'date-time') {
-      entry = '"' + key + '": {"@id": "' + uri + '", "@type": "https://uri.etsi.org/ngsi-ld/DateTime"}';
-    } else if (value.format === 'date') {
-      entry = '"' + key + '": {"@id": "' + uri + '", "@type": "https://uri.etsi.org/ngsi-ld/Date"}';
-    } else {
-      entry = '"' + key + '": "' + uri + '"';
-    }
+    // if (value.format === 'date-time') {
+    //   entry = '"' + key + '": {"@id": "' + uri + '", "@type": "https://uri.etsi.org/ngsi-ld/DateTime"}';
+    // } else if (value.format === 'date') {
+    //   entry = '"' + key + '": {"@id": "' + uri + '", "@type": "https://uri.etsi.org/ngsi-ld/Date"}';
+    // } else {
+    //   entry = '"' + key + '": "' + uri + '"';
+    // }
+    entry = '"' + key + '": "' + uri + '"';
     text.push(entry);
   } else if (type === 'Relationship') {
     text.push('"' + key + '": {"@id": "' + uri + '", "@type": "@id"}');
