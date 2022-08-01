@@ -2,55 +2,80 @@ function addCommonContextURLs(context) {
   context['ngsi-ld'] = 'https://uri.etsi.org/ngsi-ld/';
   // context.fiware = 'https://uri.fiware.org/ns/data-models#';
   context.schema = 'https://schema.org/';
+  context.smartdata = 'https://smartdatamodels.org/'
+  context.example = 'https://example.com/'
 }
 
-function addCommonGraphURLs(context) {
-  context.rdfs = 'http://www.w3.org/2000/01/rdf-schema#';
-  context.xsd = 'http://www.w3.org/2001/XMLSchema#';
-}
+// function addCommonGraphURLs(context) {
+//   context.rdfs = 'http://www.w3.org/2000/01/rdf-schema#';
+//   context.xsd = 'http://www.w3.org/2001/XMLSchema#';
+// }
 
 function replaceCommonContextURLs(text) {
   return text
     // .replace(/https:\/\/uri\.fiware\.org\/ns\/data-models#/g, 'fiware:')
     .replace(/https:\/\/schema\.org\//g, 'schema:')
-    .replace(/https:\/\/uri\.etsi\.org\/ngsi\-ld\//g, 'ngsi-ld:');
+    .replace(/https:\/\/uri\.etsi\.org\/ngsi\-ld\//g, 'ngsi-ld:')
+    .replace(/https:\/\/smartdatamodels\.org\//g, 'smartdata:')
+    .replace(/https:\/\/example\.com\//g, 'example:');
 }
 
+// function addEntry(text, type, key, uri, value, expand) {
+//   if (expand) {
+//     if (type === 'Property' || type === 'GeoProperty') {
+//       let entry;
+//       if (value.type === 'object') {
+//         entry = '"' + key + '": "' + uri + '"';
+//       } else if (value.format === 'date-time') {
+//         entry = '"' + key + '": {"@id": "' + uri + '", "@type": "xs:dateTime"}';
+//       } else if (value.format === 'URL' || value.format === 'uri') {
+//         entry = '"' + key + '": {"@id": "' + uri + '", "@type": "xs:anyURI"}';
+//       } else {
+//         entry =
+//           '"' +
+//           key +
+//           '": {"@id": "' +
+//           uri +
+//           '", "@type": "xsd:' +
+//           value.type +
+//           '"}';
+//       }
+//       text.push(entry);
+//     } else if (type === 'Relationship') {
+//       text.push('"' + key + '": {"@id": "' + uri + '", "@type": "@id"}');
+//     } else if (type === 'EnumProperty') {
+//       text.push('"' + key + '": {"@id": "' + uri + '", "@type": "@vocab"}');
+//     }
+//   } else if (
+//     type === 'Property' ||
+//     type === 'Relationship' ||
+//     type === 'EnumProperty' ||
+//     type === 'GeoProperty'
+//   ) {
+//     text.push('"' + key + '": "' + uri + '"');
+//   }
+// }
+
 function addEntry(text, type, key, uri, value, expand) {
-  if (expand) {
-    if (type === 'Property' || type === 'GeoProperty') {
-      let entry;
-      if (value.type === 'object') {
-        entry = '"' + key + '": "' + uri + '"';
-      } else if (value.format === 'date-time') {
-        entry = '"' + key + '": {"@id": "' + uri + '", "@type": "xs:dateTime"}';
-      } else if (value.format === 'URL' || value.format === 'uri') {
-        entry = '"' + key + '": {"@id": "' + uri + '", "@type": "xs:anyURI"}';
-      } else {
-        entry =
-          '"' +
-          key +
-          '": {"@id": "' +
-          uri +
-          '", "@type": "xsd:' +
-          value.type +
-          '"}';
-      }
-      text.push(entry);
-    } else if (type === 'Relationship') {
-      text.push('"' + key + '": {"@id": "' + uri + '", "@type": "@id"}');
-    } else if (type === 'EnumProperty') {
-      text.push('"' + key + '": {"@id": "' + uri + '", "@type": "@vocab"}');
+  if (uri.startsWith("https://uri.etsi.org/ngsi-ld")) {
+    return; // Do not add redundant NGSI-LD context
+  }
+
+  if (type === 'Property' || type === 'GeoProperty') {
+    let entry;
+    if (value.format === 'date-time') {
+      entry = '"' + key + '": {"@id": "' + uri + '", "@type": "https://uri.etsi.org/ngsi-ld/DateTime"}';
+    } else if (value.format === 'date') {
+      entry = '"' + key + '": {"@id": "' + uri + '", "@type": "https://uri.etsi.org/ngsi-ld/Date"}';
+    } else {
+      entry = '"' + key + '": "' + uri + '"';
     }
-  } else if (
-    type === 'Property' ||
-    type === 'Relationship' ||
-    type === 'EnumProperty' ||
-    type === 'GeoProperty'
-  ) {
-    text.push('"' + key + '": "' + uri + '"');
+    text.push(entry);
+  } else if (type === 'Relationship') {
+    text.push('"' + key + '": {"@id": "' + uri + '", "@type": "@id"}');
   }
 }
+
 
 function getContext(api, context, expand) {
   const text = [];
@@ -170,82 +195,82 @@ function addContexts(ngsi, schemaProperties, text, expand, addKeys) {
   });
 }
 
-function addGraph(api, context) {
-  const graph = [];
+// function addGraph(api, context) {
+//   const graph = [];
 
-  Object.keys(api.components.schemas).forEach(obj => {
-    const schema = api.components.schemas[obj];
-    const ngsi = schema['x-ngsi'] || {
-      'uri-prefix': 'https://uri.fiware.org/ns/data-models#'
-    };
+//   Object.keys(api.components.schemas).forEach(obj => {
+//     const schema = api.components.schemas[obj];
+//     const ngsi = schema['x-ngsi'] || {
+//       'uri-prefix': 'https://uri.fiware.org/ns/data-models#'
+//     };
 
-    const shortUri = replaceCommonContextURLs(ngsi['uri-prefix']);
+//     const shortUri = replaceCommonContextURLs(ngsi['uri-prefix']);
 
-    if (!schema.enum) {
-      graph.push({
-        '@id': shortUri + obj,
-        '@type': 'rdfs:Class',
-        'rdfs:comment': [
-          {
-            '@language': 'en',
-            '@value': (schema.description || '').trim()
-          }
-        ],
-        'rdfs:label': [
-          {
-            '@language': 'en',
-            '@value': obj
-          }
-        ],
-        'rdfs:subClassOf': {
-          '@id': 'schema:Thing'
-        }
-      });
-    }
-  });
+//     if (!schema.enum) {
+//       graph.push({
+//         '@id': shortUri + obj,
+//         '@type': 'rdfs:Class',
+//         'rdfs:comment': [
+//           {
+//             '@language': 'en',
+//             '@value': (schema.description || '').trim()
+//           }
+//         ],
+//         'rdfs:label': [
+//           {
+//             '@language': 'en',
+//             '@value': obj
+//           }
+//         ],
+//         'rdfs:subClassOf': {
+//           '@id': 'schema:Thing'
+//         }
+//       });
+//     }
+//   });
 
-  Object.keys(api.components.schemas).forEach(obj => {
-    const schema = api.components.schemas[obj];
-    if (schema.properties) {
-      Object.keys(schema.properties).forEach(key => {
-        const value = schema.properties[key];
-        const ngsi = value['x-ngsi'] || {
-          'uri-prefix': 'https://uri.fiware.org/ns/data-models#'
-        };
-        const type = ngsi.type || 'Property';
+//   Object.keys(api.components.schemas).forEach(obj => {
+//     const schema = api.components.schemas[obj];
+//     if (schema.properties) {
+//       Object.keys(schema.properties).forEach(key => {
+//         const value = schema.properties[key];
+//         const ngsi = value['x-ngsi'] || {
+//           'uri-prefix': 'https://uri.fiware.org/ns/data-models#'
+//         };
+//         const type = ngsi.type || 'Property';
 
-        if (!value.enum) {
-          const shortUri = replaceCommonContextURLs(
-            ngsi['uri-prefix'] || 'fiware:'
-          );
+//         if (!value.enum) {
+//           const shortUri = replaceCommonContextURLs(
+//             ngsi['uri-prefix'] || 'fiware:'
+//           );
 
-          graph.push({
-            '@id': shortUri + key,
-            '@type': 'ngsi-ld:' + type,
-            'rdfs:comment': [
-              {
-                '@language': 'en',
-                '@value': (value.description || '').trim()
-              }
-            ],
-            'rdfs:label': [
-              {
-                '@language': 'en',
-                '@value': key
-              }
-            ]
-          });
-        }
-      });
-    }
-  });
+//           graph.push({
+//             '@id': shortUri + key,
+//             '@type': 'ngsi-ld:' + type,
+//             'rdfs:comment': [
+//               {
+//                 '@language': 'en',
+//                 '@value': (value.description || '').trim()
+//               }
+//             ],
+//             'rdfs:label': [
+//               {
+//                 '@language': 'en',
+//                 '@value': key
+//               }
+//             ]
+//           });
+//         }
+//       });
+//     }
+//   });
 
-  context['@graph'] = graph;
+//   context['@graph'] = graph;
 
-  return context;
-}
+//   return context;
+// }
 
 exports.addCommonContextURLs = addCommonContextURLs;
-exports.addCommonGraphURLs = addCommonGraphURLs;
+// exports.addCommonGraphURLs = addCommonGraphURLs;
 exports.getContext = getContext;
-exports.addGraph = addGraph;
+// exports.addGraph = addGraph;

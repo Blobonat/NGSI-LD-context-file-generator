@@ -8,4 +8,4 @@ Code Generator for `@context`-Files (NGSI-LD and JSON-LD) used in the [official 
 
 ## Usage
 
-`./services [create|markdown|ngsi|jsonld|validate] [file]` (Prerequisite: Docker is running)
+`./services [create|markdown|ngsi|validate] [file]` (Prerequisite: Docker is running)

@@ -8,8 +8,8 @@ const JSONLD = require('./jsonld.js');
 let api;
 
 const context = {
-  type: '@type',
-  id: '@id'
+  // type: '@type',
+  // id: '@id'
 };
 
 async function validate(file) {
@@ -48,22 +48,22 @@ async function ngsi(input, lang) {
   console.log(JSON.stringify(JSONLD.getContext(api, context, false), null, 4));
 }
 
-async function jsonld(input, lang) {
-  JSONLD.addCommonContextURLs(context);
-  JSONLD.addCommonGraphURLs(context);
+// async function jsonld(input, lang) {
+//   JSONLD.addCommonContextURLs(context);
+//   JSONLD.addCommonGraphURLs(context);
 
-  await dereferenceYaml(input);
+//   await dereferenceYaml(input);
 
-  console.log(
-    JSON.stringify(
-      JSONLD.addGraph(api, JSONLD.getContext(api, context, true)),
-      null,
-      4
-    )
-  );
-}
+//   console.log(
+//     JSON.stringify(
+//       JSONLD.addGraph(api, JSONLD.getContext(api, context, true)),
+//       null,
+//       4
+//     )
+//   );
+// }
 
 exports.validate = validate;
 exports.markdown = markdown;
-exports.jsonld = jsonld;
+// exports.jsonld = jsonld;
 exports.ngsi = ngsi;
