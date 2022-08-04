@@ -20,62 +20,62 @@ function replaceCommonContextURLs(text) {
     .replace(/https:\/\/example\.com\//g, 'example:');
 }
 
-// function addEntry(text, type, key, uri, value, expand) {
-//   if (expand) {
-//     if (type === 'Property' || type === 'GeoProperty') {
-//       let entry;
-//       if (value.type === 'object') {
-//         entry = '"' + key + '": "' + uri + '"';
-//       } else if (value.format === 'date-time') {
-//         entry = '"' + key + '": {"@id": "' + uri + '", "@type": "xs:dateTime"}';
-//       } else if (value.format === 'URL' || value.format === 'uri') {
-//         entry = '"' + key + '": {"@id": "' + uri + '", "@type": "xs:anyURI"}';
-//       } else {
-//         entry =
-//           '"' +
-//           key +
-//           '": {"@id": "' +
-//           uri +
-//           '", "@type": "xsd:' +
-//           value.type +
-//           '"}';
-//       }
-//       text.push(entry);
-//     } else if (type === 'Relationship') {
-//       text.push('"' + key + '": {"@id": "' + uri + '", "@type": "@id"}');
-//     } else if (type === 'EnumProperty') {
-//       text.push('"' + key + '": {"@id": "' + uri + '", "@type": "@vocab"}');
-//     }
-//   } else if (
-//     type === 'Property' ||
-//     type === 'Relationship' ||
-//     type === 'EnumProperty' ||
-//     type === 'GeoProperty'
-//   ) {
-//     text.push('"' + key + '": "' + uri + '"');
-//   }
-// }
-
 function addEntry(text, type, key, uri, value, expand) {
-  if (uri.startsWith("https://uri.etsi.org/ngsi-ld")) {
-    return; // Do not add redundant NGSI-LD context
-  }
-
-  if (type === 'Property' || type === 'GeoProperty') {
-    let entry;
-    // if (value.format === 'date-time') {
-    //   entry = '"' + key + '": {"@id": "' + uri + '", "@type": "https://uri.etsi.org/ngsi-ld/DateTime"}';
-    // } else if (value.format === 'date') {
-    //   entry = '"' + key + '": {"@id": "' + uri + '", "@type": "https://uri.etsi.org/ngsi-ld/Date"}';
-    // } else {
-    //   entry = '"' + key + '": "' + uri + '"';
-    // }
-    entry = '"' + key + '": "' + uri + '"';
-    text.push(entry);
-  } else if (type === 'Relationship') {
-    text.push('"' + key + '": {"@id": "' + uri + '", "@type": "@id"}');
+  if (expand) {
+    if (type === 'Property' || type === 'GeoProperty') {
+      let entry;
+      if (value.type === 'object') {
+        entry = '"' + key + '": "' + uri + '"';
+      } else if (value.format === 'date-time') {
+        entry = '"' + key + '": {"@id": "' + uri + '", "@type": "xs:dateTime"}';
+      } else if (value.format === 'URL' || value.format === 'uri') {
+        entry = '"' + key + '": {"@id": "' + uri + '", "@type": "xs:anyURI"}';
+      } else {
+        entry =
+          '"' +
+          key +
+          '": {"@id": "' +
+          uri +
+          '", "@type": "xsd:' +
+          value.type +
+          '"}';
+      }
+      text.push(entry);
+    } else if (type === 'Relationship') {
+      text.push('"' + key + '": {"@id": "' + uri + '", "@type": "@id"}');
+    } else if (type === 'EnumProperty') {
+      text.push('"' + key + '": {"@id": "' + uri + '", "@type": "@vocab"}');
+    }
+  } else if (
+    type === 'Property' ||
+    type === 'Relationship' ||
+    type === 'EnumProperty' ||
+    type === 'GeoProperty'
+  ) {
+    text.push('"' + key + '": "' + uri + '"');
   }
 }
+
+// function addEntry(text, type, key, uri, value, expand) {
+//   if (uri.startsWith("https://uri.etsi.org/ngsi-ld")) {
+//     return; // Do not add redundant NGSI-LD context
+//   }
+
+//   if (type === 'Property' || type === 'GeoProperty') {
+//     let entry;
+//     // if (value.format === 'date-time') {
+//     //   entry = '"' + key + '": {"@id": "' + uri + '", "@type": "https://uri.etsi.org/ngsi-ld/DateTime"}';
+//     // } else if (value.format === 'date') {
+//     //   entry = '"' + key + '": {"@id": "' + uri + '", "@type": "https://uri.etsi.org/ngsi-ld/Date"}';
+//     // } else {
+//     //   entry = '"' + key + '": "' + uri + '"';
+//     // }
+//     entry = '"' + key + '": "' + uri + '"';
+//     text.push(entry);
+//   } else if (type === 'Relationship') {
+//     text.push('"' + key + '": {"@id": "' + uri + '", "@type": "@id"}');
+//   }
+// }
 
 
 function getContext(api, context, expand) {
