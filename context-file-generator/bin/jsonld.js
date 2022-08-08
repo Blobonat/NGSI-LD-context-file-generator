@@ -15,12 +15,16 @@ function replaceCommonContextURLs(text) {
   return text
     // .replace(/https:\/\/uri\.fiware\.org\/ns\/data-models#/g, 'fiware:')
     .replace(/https:\/\/schema\.org\//g, 'schema:')
-    .replace(/https:\/\/uri\.etsi\.org\/ngsi\-ld\//g, 'ngsi-ld:')
+    //.replace(/https:\/\/uri\.etsi\.org\/ngsi\-ld\//g, 'ngsi-ld:')
     .replace(/https:\/\/smartdatamodels\.org\//g, 'smartdata:')
     .replace(/https:\/\/example\.com\//g, 'example:');
 }
 
 function addEntry(text, type, key, uri, value, expand) {
+  if (uri.startsWith("https://uri.etsi.org/ngsi-ld")) {
+    return; // Do not add redundant NGSI-LD context
+  }
+
   if (expand) {
     if (type === 'Property' || type === 'GeoProperty') {
       let entry;
@@ -129,7 +133,7 @@ function getContext(api, context, expand) {
 
   Object.keys(unordered)
     .sort()
-    .forEach(function(key) {
+    .forEach(function (key) {
       context[key] = unordered[key];
     });
 
